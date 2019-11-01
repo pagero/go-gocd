@@ -70,7 +70,7 @@ func (s *AgentsService) List(ctx context.Context) (agents []*Agent, resp *APIRes
 	_, resp, err = s.client.getAction(ctx, &APIClientRequest{
 		Path:         "agents",
 		ResponseBody: &r,
-		APIVersion:   apiV4,
+		APIVersion:   "application/vnd.go.cd.v6+json",
 	})
 
 	for _, agent := range r.Embedded.Agents {
