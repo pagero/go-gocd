@@ -157,6 +157,7 @@ func (pgs *PipelinesService) GetHistory(ctx context.Context, name string, offset
 	pt = &PipelineHistory{}
 	_, resp, err = pgs.client.getAction(ctx, &APIClientRequest{
 		Path:         pgs.buildPaginatedStub("pipelines/%s/history", name, offset),
+		APIVersion:   apiLatest,
 		ResponseBody: &pt,
 	})
 
