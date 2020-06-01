@@ -16,23 +16,29 @@ type PipelineGroup struct {
 
 // List Pipeline groups
 func (pgs *PipelineGroupsService) List(ctx context.Context, name string) (*PipelineGroups, *APIResponse, error) {
-
-	pg := []*PipelineGroup{}
+	type EmbeddedObj struct {
+		PipelineGroup []*PipelineGroup `json:"groups"`
+	}
+	type AllPipelineGroupsResponse struct {
+		Embedded EmbeddedObj `json:"_embedded"`
+	}
+	pg := new(AllPipelineGroupsResponse)
 	_, resp, err := pgs.client.getAction(ctx, &APIClientRequest{
-		Path:         "config/pipeline_groups",
+		Path:         "admin/pipeline_groups",
+		APIVersion:   apiLatest,
 		ResponseType: responseTypeJSON,
 		ResponseBody: &pg,
 	})
 
 	filtered := PipelineGroups{}
 	if name != "" && err == nil {
-		for _, pipelineGroup := range pg {
+		for _, pipelineGroup := range pg.Embedded.PipelineGroup {
 			if pipelineGroup.Name == name {
 				filtered = append(filtered, pipelineGroup)
 			}
 		}
 	} else {
-		filtered = pg
+		filtered = pg.Embedded.PipelineGroup
 	}
 
 	return &filtered, resp, err

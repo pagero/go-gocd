@@ -18,7 +18,7 @@ func testPipelineGroupsServiceFilter(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc("/api/config/pipeline_groups", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/api/admin/pipeline_groups", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, r.Method, "GET", "Unexpected HTTP method")
 		j, _ := ioutil.ReadFile("test/resources/pipelinegroups.1.json")
 		fmt.Fprint(w, string(j))
@@ -36,7 +36,7 @@ func testPipelineGroupsServiceList(t *testing.T) {
 	setup()
 	defer teardown()
 
-	mux.HandleFunc("/api/config/pipeline_groups", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/api/admin/pipeline_groups", func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, r.Method, "GET", "Unexpected HTTP method")
 		j, _ := ioutil.ReadFile("test/resources/pipelinegroups.0.json")
 		fmt.Fprint(w, string(j))
@@ -53,15 +53,4 @@ func testPipelineGroupsServiceList(t *testing.T) {
 
 	p := pg.Pipelines[0]
 	assert.Equal(t, p.Name, "up42")
-	assert.Equal(t, p.Label, "${COUNT}")
-	assert.Len(t, p.Stages, 1)
-	assert.Len(t, p.Materials, 1)
-
-	s := p.Stages[0]
-	assert.Equal(t, s.Name, "up42_stage")
-
-	m := p.Materials[0]
-	assert.Equal(t, m.Type, "Git")
-	assert.Equal(t, m.Fingerprint, "2d05446cd52a998fe3afd840fc2c46b7c7e421051f0209c7f619c95bedc28b88")
-	assert.Equal(t, m.Description, "URL: https://github.com/gocd/gocd, Branch: master")
 }
