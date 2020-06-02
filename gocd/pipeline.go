@@ -152,11 +152,11 @@ func (pgs *PipelinesService) GetInstance(ctx context.Context, name string, offse
 }
 
 // GetHistory returns a list of pipeline instances describing the pipeline history.
-func (pgs *PipelinesService) GetHistory(ctx context.Context, name string, offset int) (pt *PipelineHistory, resp *APIResponse, err error) {
+func (pgs *PipelinesService) GetHistory(ctx context.Context, name string, page_size int) (pt *PipelineHistory, resp *APIResponse, err error) {
 
 	pt = &PipelineHistory{}
 	_, resp, err = pgs.client.getAction(ctx, &APIClientRequest{
-		Path:         pgs.buildPaginatedStub("pipelines/%s/history", name, offset),
+		Path:         fmt.Sprintf("pipelines/%s/history?page_size=%d", name, page_size),
 		APIVersion:   apiLatest,
 		ResponseBody: &pt,
 	})
